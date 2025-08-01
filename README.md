@@ -1,4 +1,3 @@
-
 # Spendyze - AI-Powered Personal Finance Tracker
 
 ![Spendyze Dashboard](./screenshots/spendyze-dashboard.png)
@@ -42,16 +41,29 @@ Spendyze is a modern, full-stack web application designed to help users effortle
 
 ## 📸 Screenshots
 
-*To add your own screenshots, place them in a `/screenshots` directory in the project root and update the paths below.*
 
-| AI Scan & Add Transaction             | Transactions List & Filtering          |
-| ------------------------------------- | -------------------------------------- |
-| ![Add/Scan Page](./screenshots/add-scan-page.png) | ![Transactions Page](./screenshots/transactions-page.png) |
 
-| Chatbot Interface                       | Mobile Responsive View                |
-| --------------------------------------- | ------------------------------------- |
-| ![Chatbot](./screenshots/chatbot.png)   | ![Mobile View](./screenshots/mobile-view.png) |
+### AI Scan & Add Transaction
 
+| ![Add/Scan Page](./screenshots/add-scan-page.png) |
+
+---
+
+### Transactions List & Filtering
+
+| ![Transactions Page](./screenshots/transactions-page.png) |
+
+---
+
+### Chatbot Interface
+
+| ![Chatbot](./screenshots/chatbot.png) |
+
+---
+
+### Mobile Responsive View
+
+| ![Mobile View](./screenshots/mobile-view.png) |
 
 ---
 
@@ -143,6 +155,3 @@ FROM_EMAIL=alerts@spendyze.com
 
 ---
 
-## 📄 License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
