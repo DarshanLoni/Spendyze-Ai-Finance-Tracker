@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { NavLink, useNavigate, Link } from 'react-router-dom';
-import { HomeIcon, ListBulletIcon, PlusCircleIcon, BanknotesIcon, ArrowRightOnRectangleIcon, CalculatorIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, ListBulletIcon, PlusCircleIcon, BanknotesIcon, ArrowRightOnRectangleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '../context/AuthContext';
 
 const Sidebar: React.FC<{ isSidebarOpen: boolean; setIsSidebarOpen: (isOpen: boolean) => void; }> = ({ isSidebarOpen, setIsSidebarOpen }) => {
@@ -44,10 +44,6 @@ const Sidebar: React.FC<{ isSidebarOpen: boolean; setIsSidebarOpen: (isOpen: boo
         <NavLink to="/app/add" onClick={closeSidebar} className={({ isActive }) => `${navLinkClasses} ${isActive ? activeLinkClasses : ''}`}>
           <PlusCircleIcon className="h-6 w-6 mr-3" />
           Add / Scan
-        </NavLink>
-        <NavLink to="/app/budget" onClick={closeSidebar} className={({ isActive }) => `${navLinkClasses} ${isActive ? activeLinkClasses : ''}`}>
-          <CalculatorIcon className="h-6 w-6 mr-3" />
-          Smart Budget
         </NavLink>
       </nav>
       <div className="mt-auto">

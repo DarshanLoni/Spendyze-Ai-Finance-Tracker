@@ -1,3 +1,5 @@
+
+
 import express from 'express';
 import { getAiSummary, scanBill, getChatResponse } from '../controllers/aiController.js';
 import { protect } from '../middleware/authMiddleware.js';

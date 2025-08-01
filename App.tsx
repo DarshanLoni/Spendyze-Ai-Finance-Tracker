@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { DataProvider } from './context/DataContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -39,7 +39,7 @@ function App() {
               },
             }}
           />
-          <BrowserRouter>
+          <HashRouter>
             <Routes>
               {/* Public routes */}
               <Route path="/" element={<LandingPage />} />
@@ -59,7 +59,7 @@ function App() {
               {/* Fallback route */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
-          </BrowserRouter>
+          </HashRouter>
         </DataProvider>
       </AuthProvider>
     </ThemeProvider>
