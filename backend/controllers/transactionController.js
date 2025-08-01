@@ -116,7 +116,7 @@ const checkBudgetAlerts = async (req, res) => {
         }
 
         const usagePercentage = (totalExpenses / totalIncome) * 100;
-        const thresholdsToAnnounce = [100, 80, 50]; // Check from highest to lowest
+        const thresholdsToAnnounce = [100, 90]; // Check from highest to lowest
 
         for (const threshold of thresholdsToAnnounce) {
             if (usagePercentage >= threshold && !user.notifiedThresholds.includes(threshold)) {
@@ -124,7 +124,7 @@ const checkBudgetAlerts = async (req, res) => {
                 // Generate AI summary for the email
                 const aiSummary = await generateFinancialSummary(transactions, 'for an email alert');
                 
-                // Send email (simulation)
+                // Send email
                 await sendBudgetAlertEmail(user, transactions, totalIncome, totalExpenses, threshold, aiSummary);
 
                 // Update user's notified thresholds and save
