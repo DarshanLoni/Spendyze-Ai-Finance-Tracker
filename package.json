@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Frontend for Spendyze AI Finance Tracker",
   "scripts": {
-    "build": "esbuild index.tsx --bundle --outfile=bundle.js --minify --define:process.env.NODE_ENV='\"production\"'",
-    "dev": "esbuild index.tsx --bundle --outfile=bundle.js --servedir=. --define:process.env.NODE_ENV='\"development\"' --port=3000"
+    "build": "esbuild index.tsx --bundle --outfile=dist/bundle.js --minify --define:process.env.NODE_ENV='\"production\"'",
+    "dev": "esbuild index.tsx --bundle --outfile=dist/bundle.js --servedir=. --define:process.env.NODE_ENV='\"development\"' --port=3000"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.3",
