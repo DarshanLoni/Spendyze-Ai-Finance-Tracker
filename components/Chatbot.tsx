@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { PaperAirplaneIcon, SparklesIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import { useAuth } from '../context/AuthContext';
 
-const API_URL = 'http://localhost:5000/api/ai/chat';
+const API_URL = 'https://spendyze-fin-track.onrender.com/api/ai/chat';
 
 interface Message {
   sender: 'user' | 'bot';

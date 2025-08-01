@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import toast from 'react-hot-toast';
 
-const API_URL = 'http://localhost:5000/api/auth';
+const API_URL = 'https://spendyze-fin-track.onrender.com/api/auth';
 
 interface User {
   name: string;

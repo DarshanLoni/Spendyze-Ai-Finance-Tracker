@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { Transaction } from '../../types';
 import { PhotoIcon, SparklesIcon, ArrowPathIcon } from '@heroicons/react/24/solid';
 
-const API_URL = 'http://localhost:5000/api/ai/scan';
+const API_URL = 'https://spendyze-fin-track.onrender.com/api/ai/scan';
 
 interface BillScannerProps {
     onScanSuccess: (data: Partial<Transaction>) => void;

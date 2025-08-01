@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { Transaction } from '../types';
 import { useAuth } from './AuthContext';
 
-const API_URL = 'http://localhost:5000/api/transactions';
+const API_URL = 'https://spendyze-fin-track.onrender.com/api/transactions';
 
 // Helper to get auth headers
 const getAuthHeader = (token: string | null) => {
