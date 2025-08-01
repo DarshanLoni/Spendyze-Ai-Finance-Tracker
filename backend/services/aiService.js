@@ -1,5 +1,4 @@
-import dotenv from 'dotenv';
-dotenv.config();
+
 import { GoogleGenAI, Type } from "@google/genai";
 
 if (!process.env.API_KEY) {
@@ -15,7 +14,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
  * @returns {Promise<string>} The AI-generated summary.
  */
 export const generateFinancialSummary = async (transactions, context = '') => {
-  const prompt = `Based on the following JSON transaction data, provide a very brief (2-3 sentences) summary of the user's financial activity ${context}. Highlight one positive trend and one area for improvement. Be concise and encouraging.
+  const prompt = `Based on the following JSON transaction data, provide a very brief (2-3 sentences) summary of the user's financial activity ${context}. Highlight one positive trend and one area for improvement. Be concise and encouraging. All monetary values should be presented using the Indian Rupee symbol (₹).
   
   Transactions:
   ${JSON.stringify(transactions, null, 2)}`;
@@ -98,7 +97,8 @@ export const getChatbotResponse = async (history, transactions) => {
     const systemInstruction = `You are a friendly and helpful financial assistant named Fin.
     Analyze the user's financial data to answer their questions. The user's recent transactions are provided below in JSON format.
     Base your answers SOLELY on this data. Do not make up information. If you don't know the answer, say so.
-    Be concise and clear in your responses. Current date is ${new Date().toDateString()}.
+    Be concise and clear in your responses. When mentioning any monetary value, you MUST use the Indian Rupee symbol (₹) and not the word "Rupees" or "INR". For example, write ₹500, not 500 Rupees.
+    Current date is ${new Date().toDateString()}.
     
     TRANSACTION DATA:
     ${transactionContext}`;
@@ -126,5 +126,104 @@ export const getChatbotResponse = async (history, transactions) => {
     } catch (err) {
         console.error("AI Chatbot Error:", err);
         throw new Error("Failed to get response from AI Chatbot.");
+    }
+};
+
+/**
+ * Generates a personalized budget recommendation.
+ * @param {Array} transactions - The user's recent transactions.
+ * @returns {Promise<Object>} The AI-generated budget plan.
+ */
+export const recommendBudgetWithAI = async (transactions) => {
+    const prompt = `
+        Analyze the provided user transaction data to create a personalized monthly budget.
+        - First, calculate the user's average monthly income and average monthly expenses based on the data.
+        - Next, create a budget plan based on the 50/30/20 rule (50% Needs, 30% Wants, 20% Savings), using the calculated average monthly income.
+        - Determine the user's actual spending in each of these three main categories (Needs, Wants, Savings). For classification, consider 'Housing', 'Transport', 'Food', 'Health' as Needs. Consider 'Entertainment' as Wants. Other expenses can be classified based on their title. Treat income as separate from these budget categories. Savings is the income that is not spent.
+        - Then, provide a breakdown for major expense categories. For each, show their actual average monthly spending and recommend a budget.
+        - Finally, provide a brief, encouraging summary and one key insight.
+        
+        User Transactions:
+        ${JSON.stringify(transactions, null, 2)}
+    `;
+
+    const schema = {
+        type: Type.OBJECT,
+        properties: {
+            summary: { type: Type.STRING, description: "A brief, encouraging overview of the user's finances and the proposed budget." },
+            analysis: {
+                type: Type.OBJECT,
+                properties: {
+                    averageMonthlyIncome: { type: Type.NUMBER, description: "The calculated average monthly income." },
+                    totalMonthlyExpense: { type: Type.NUMBER, description: "The calculated average total monthly expenses." },
+                },
+                required: ["averageMonthlyIncome", "totalMonthlyExpense"]
+            },
+            plan: {
+                type: Type.OBJECT,
+                properties: {
+                    needs: {
+                        type: Type.OBJECT,
+                        properties: {
+                            percentage: { type: Type.NUMBER },
+                            recommendedAmount: { type: Type.NUMBER },
+                            actualAmount: { type: Type.NUMBER }
+                        },
+                        required: ["percentage", "recommendedAmount", "actualAmount"]
+                    },
+                    wants: {
+                        type: Type.OBJECT,
+                        properties: {
+                            percentage: { type: Type.NUMBER },
+                            recommendedAmount: { type: Type.NUMBER },
+                            actualAmount: { type: Type.NUMBER }
+                        },
+                        required: ["percentage", "recommendedAmount", "actualAmount"]
+                    },
+                    savings: {
+                        type: Type.OBJECT,
+                        properties: {
+                            percentage: { type: Type.NUMBER },
+                            recommendedAmount: { type: Type.NUMBER },
+                            actualAmount: { type: Type.NUMBER }
+                        },
+                         required: ["percentage", "recommendedAmount", "actualAmount"]
+                    }
+                },
+                 required: ["needs", "wants", "savings"]
+            },
+            categoryRecommendations: {
+                type: Type.ARRAY,
+                description: "A list of recommendations for specific spending categories.",
+                items: {
+                    type: Type.OBJECT,
+                    properties: {
+                        category: { type: Type.STRING },
+                        recommendedAmount: { type: Type.NUMBER },
+                        actualAmount: { type: Type.NUMBER },
+                        insight: { type: Type.STRING, description: "A short, actionable tip for this category." }
+                    },
+                    required: ["category", "recommendedAmount", "actualAmount", "insight"]
+                }
+            }
+        },
+        required: ["summary", "analysis", "plan", "categoryRecommendations"]
+    };
+
+     try {
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: prompt,
+            config: {
+                responseMimeType: "application/json",
+                responseSchema: schema
+            }
+        });
+        
+        return JSON.parse(response.text);
+
+    } catch (err) {
+        console.error("AI Budget Recommendation Error:", err);
+        throw new Error("Failed to generate budget with AI. The model may have had trouble analyzing the data.");
     }
 };

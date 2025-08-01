@@ -48,8 +48,17 @@ const BillScanner: React.FC<BillScannerProps> = ({ onScanSuccess }) => {
             });
 
             if (!response.ok) {
-                const errData = await response.json();
-                throw new Error(errData.message || 'Failed to analyze bill.');
+                let errorMessage = 'Failed to analyze bill.';
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    try {
+                        const errorData = await response.json();
+                        errorMessage = errorData.message || errorMessage;
+                    } catch (e) {
+                        console.error("Could not parse JSON error response", e);
+                    }
+                }
+                throw new Error(errorMessage);
             }
 
             const data = await response.json();
@@ -58,7 +67,8 @@ const BillScanner: React.FC<BillScannerProps> = ({ onScanSuccess }) => {
 
         } catch (err) {
             console.error('AI bill scan error:', err);
-            toast.error(err.message);
+            const message = (err as Error).message;
+            toast.error(message);
         } finally {
             setIsLoading(false);
         }

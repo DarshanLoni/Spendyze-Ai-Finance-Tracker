@@ -46,13 +46,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-      const data = await response.json();
       
       if (!response.ok) {
-        toast.error(data.message || "Login failed.");
+        let errorMessage = "Login failed.";
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.message || errorMessage;
+            } catch (e) {
+                // Fallback to default message
+            }
+        }
+        toast.error(errorMessage);
         return false;
       }
 
+      const data = await response.json();
       localStorage.setItem('authToken', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
       setUserToken(data.token);
@@ -72,13 +82,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
       });
-      const data = await response.json();
       
       if (!response.ok) {
-        toast.error(data.message || "Signup failed.");
+        let errorMessage = "Signup failed.";
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.message || errorMessage;
+            } catch (e) {
+                // fallback to default message
+            }
+        }
+        toast.error(errorMessage);
         return false;
       }
 
+      const data = await response.json();
       localStorage.setItem('authToken', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
       setUserToken(data.token);

@@ -97,7 +97,6 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (!userToken) return;
 
     // Create a new object with only the fields that should be updated.
-    // This prevents sending the 'id' or other metadata in the request body.
     const updateData = {
         type: transaction.type,
         title: transaction.title,
@@ -116,10 +115,21 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             },
             body: JSON.stringify(updateData),
         });
+
         if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ message: 'Failed to update transaction.' }));
-            throw new Error(errorData.message || 'Failed to update transaction.');
+            let errorMessage = 'Failed to update transaction.';
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } catch (e) {
+                    console.error("Could not parse JSON error response", e);
+                }
+            }
+            throw new Error(errorMessage);
         }
+        
         const updatedTransaction = await response.json();
         setTransactions(prev => prev.map(t => t.id === updatedTransaction.id ? updatedTransaction : t));
         toast.success('Transaction updated successfully!');
