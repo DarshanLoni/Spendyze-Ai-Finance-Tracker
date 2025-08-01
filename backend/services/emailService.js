@@ -108,7 +108,7 @@ export const sendBudgetAlertEmail = async (
                 </div>
                 <p>Log in to Spendyze to see a full breakdown of your transactions and stay on top of your finances.</p>
                 <p style="text-align: center; margin-top: 32px;">
-                    <a href="#" class="button">View Your Dashboard</a>
+                    <a href="https://spendyze-self.vercel.app/#/app/dashboard" class="button">View Your Dashboard</a>
                 </p>
             </div>
             <div class="footer">
