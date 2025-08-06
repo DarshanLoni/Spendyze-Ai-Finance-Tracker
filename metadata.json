@@ -1,0 +1,8 @@
+
+{
+  "name": "AI Finance Tracker",
+  "description": "An intelligent finance tracker that uses AI to help you manage your income and expenses. Features include AI-powered bill scanning, financial summaries, and a chatbot to answer your financial questions.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
