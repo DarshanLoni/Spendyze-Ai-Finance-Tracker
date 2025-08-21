@@ -1,7 +1,3 @@
-
-
-
-
 import { GoogleGenAI, Type } from "@google/genai";
 
 if (!process.env.API_KEY) {
@@ -11,14 +7,22 @@ if (!process.env.API_KEY) {
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 /**
- * Generates a financial summary based on user transactions.
+ * Generates a structured financial summary based on user transactions.
  * @param {Array} transactions - The user's transactions.
  * @param {string} context - Optional context for the prompt, e.g., 'for an email alert'.
- * @returns {Promise<string>} The AI-generated summary.
+ * @returns {Promise<{ overview: string, positive: string, suggestion: string }>}
  */
 export const generateFinancialSummary = async (transactions, context = '') => {
-  const prompt = `Based on the following JSON transaction data, provide a very brief (2-3 sentences) summary of the user's financial activity ${context}. Highlight one positive trend and one area for improvement. Be concise and encouraging. All monetary values should be presented using the Indian Rupee symbol (₹).
-  
+  const prompt = `Based on the following JSON transaction data, provide a structured financial summary ${context}.
+  Return your response strictly in valid JSON format with the following fields:
+  {
+    "overview": "2-3 sentence summary of overall financial activity.",
+    "positive": "Highlight one positive financial trend.",
+    "suggestion": "Suggest one area for improvement."
+  }
+
+  Be concise and encouraging. All monetary values should be presented using the Indian Rupee symbol (₹).
+
   Transactions:
   ${JSON.stringify(transactions, null, 2)}`;
 
@@ -26,8 +30,18 @@ export const generateFinancialSummary = async (transactions, context = '') => {
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
         contents: prompt,
+        config: {
+          responseMimeType: "application/json"
+        }
     });
-    return response.text;
+
+    const parsed = JSON.parse(response.text);
+
+    return {
+      overview: parsed.overview || "",
+      positive: parsed.positive || "",
+      suggestion: parsed.suggestion || ""
+    };
   } catch (err) {
     console.error("AI Summary Generation Error:", err);
     throw new Error("Failed to generate summary from AI.");
