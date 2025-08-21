@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import { SparklesIcon } from '@heroicons/react/24/outline';
 
-const API_URL = 'http://localhost:5000/api/ai/summary';
+const API_URL = 'https://spendyze-fin-track.onrender.com/api/ai/summary';
 
 const AISummary: React.FC = () => {
     const [summary, setSummary] = useState('');
